@@ -1,7 +1,8 @@
 #include<stdio.h>
-#include <math.h>
 #define process 3
 #define resource 3
+//flag to check if the all the process has finished its tasks or not
+int flagComplete[process]={0,0,0};
 int e[resource];
 int a[resource];
 int c[resource][process];
@@ -12,19 +13,38 @@ void readMatrix();
 void status();
 void getA();
 int runableProcess();
+void runProcess(int);
 
 int main()
 {
+	int result;
 	readMatrix();
-	getA();
-	status();
-	if(runableProcess()==-1)
+	for (int x=0;x<process;x++)
 	{
-			printf("\nNON OF THE PROCESS CAN RUN \n The process is Deadlock");
-	}
-	else 
-	{
-			printf("\n PROCESS %d CAN RUN",runableProcess());
+		getA();
+		status();
+		result = runableProcess();
+		if(result==-1)
+		{
+			if (flagComplete[0]==0 && flagComplete[1]==0 && flagComplete[2]==0)
+			{
+				printf("\nAll of the process has been processed");
+				return 0;
+			}	
+			else
+			{
+				printf("\nNON OF THE PROCESS CAN RUN \n The process is Deadlock");
+				return 1;
+			}
+		}
+		else 
+		{
+			printf("\n PROCESS %d CAN RUN",result);
+			////
+				runProcess(result);
+			////
+			flagComplete[result]=1;
+		}
 	}
 	return 0;
 }
@@ -50,12 +70,12 @@ void getA()
 void status()
 {
 	int i,j;
-		printf("\n\n \nE\n");
+		printf("\n \nE\n");
 		for (i=0;i<resource ;i++)
 		{
 			printf("%d, ",e[i]);
 		}
-		printf("\n \nR\n");
+		printf("\n R\n");
 		for (i=0;i<process ;i++)
 		{
 			for (j=0;j<resource;j++)
@@ -127,9 +147,18 @@ int runableProcess()
 					possible++;
 				}
 			}
-		if (possible==3)
+		if (possible==3 && flagComplete[j]==0)
 				return j;
 		}
-		return -1;
-	
+		return -1;	
+}
+
+void runProcess(int x)
+{
+	for(int i=0;i<resource;i++)
+	{
+		r[x][i]=0;
+		a[i]+=c[x][i];
+		c[x][i]=0;
+	}
 }
