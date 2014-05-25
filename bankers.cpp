@@ -1,37 +1,34 @@
 #include<stdio.h>
-#define process 3
-#define resource 3
-//flag to check if the all the process has finished its tasks or not
-int flagComplete[process]={0,0,0};
-int e[resource];
-int a[resource];
-int c[resource][process];
-int r[resource][process];
-int temp[resource];
-void generateA();
-void readMatrix();
-void status();
-void getA();
-int runableProcess();
-void runProcess(int);
+#define process 3 //total number of process
+#define resource 3 //total types of different resources
+
+////Variables
+int flagComplete[process]={0,0,0};//flag to check if the all the process has finished its tasks or not
+int e[resource];//matrix to store total resource that the system has
+int a[resource];//matrix to store total available or unused resource
+int c[resource][process];//matrix to store data of each roesurce taken by each process
+int r[resource][process];//matrix to store data of each resource that a process requires 
+
+////functions
+
+void readMatrix();//read content of matrices e,c,r
+void status();//displays contents of all matrices e,a,c,r
+void getA();//generate available resources
+int runableProcess();//returns the runable process number(-1 if no runable process is found)
+void runProcess(int);//runs the given process and frees the resources used by the process so that it is available to run other processes
+
 
 int main()
 {
 	int result;
 	readMatrix();
+	getA();
 	for (int x=0;x<process;x++)
-	{
-		getA();
+	{	
 		status();
 		result = runableProcess();
 		if(result==-1)
-		{	//Think this is not required
-			/*if (flagComplete[0]==1 && flagComplete[1]==1 && flagComplete[2]==1)
-			{
-				printf("\nAll of the process has been processed");
-				return 0;
-			}	
-			else*/
+		{	
 			{
 				printf("\nNON OF THE PROCESS CAN RUN \n The process is Deadlock");
 				return 1;
@@ -39,31 +36,26 @@ int main()
 		}
 		else 
 		{
-			printf("\n PROCESS %d CAN RUN",result);
-			////
-				runProcess(result);
-			////
+			printf("\n PROCESS %d CAN RUN",result);			
+			runProcess(result);
 			flagComplete[result]=1;
 		}
 	}
 	printf("\nAll of the process has been processed");
+	status();
 	return 0;
 }
 
 void getA()
 {
-	temp[0]=0;
-	temp[1]=0;
-	temp[2]=0;	
+	int temp[resource]={0,0,0};
 	for (int i=0 ; i<process;i++)
 		{for (int j=0;j<resource;j++)
 			temp[i]=temp[i]+c[j][i];
-		printf("%d    ,  ",temp[i]);
 		}	
 	for (int i=0;i<resource;i++)
 	{
-		a[i]=e[i]-temp[i];
-		printf("%d-%d=%d   ",e[i],temp[i],a[i]);
+		a[i]=e[i]-temp[i];		
 	}
 			
 }
@@ -99,8 +91,7 @@ void status()
 		for (i=0;i<resource ;i++)
 		{
 			printf("%d,",a[i]);
-		}
-		
+		}		
 }
 
 
@@ -138,6 +129,9 @@ void readMatrix()
 int runableProcess()
 {
 	int possible;
+	
+
+	
 	for (int j=0;j<resource;j++)
 		{
 		possible=0;
@@ -163,3 +157,4 @@ void runProcess(int x)
 		c[x][i]=0;
 	}
 }
+
