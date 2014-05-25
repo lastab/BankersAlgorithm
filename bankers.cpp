@@ -25,13 +25,13 @@ int main()
 		status();
 		result = runableProcess();
 		if(result==-1)
-		{
-			if (flagComplete[0]==0 && flagComplete[1]==0 && flagComplete[2]==0)
+		{	//Think this is not required
+			/*if (flagComplete[0]==1 && flagComplete[1]==1 && flagComplete[2]==1)
 			{
 				printf("\nAll of the process has been processed");
 				return 0;
 			}	
-			else
+			else*/
 			{
 				printf("\nNON OF THE PROCESS CAN RUN \n The process is Deadlock");
 				return 1;
@@ -46,6 +46,7 @@ int main()
 			flagComplete[result]=1;
 		}
 	}
+	printf("\nAll of the process has been processed");
 	return 0;
 }
 
